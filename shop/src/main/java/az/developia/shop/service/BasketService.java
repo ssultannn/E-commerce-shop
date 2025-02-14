@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BasketService {
@@ -47,4 +48,20 @@ public class BasketService {
 			basketItemRepository.deleteAll(basketItemRepository.findByBasketId(basket.getId()));
 		}
 	}
+
+	   public void removeBasketItem(Long userId, Long basketItemId) {
+	        Basket basket = basketRepository.findByUserId(userId);
+	        if (basket == null) {
+	            throw new RuntimeException("Basket not found for user " + userId);
+	        }
+	        Optional<BasketItem> basketItemOpt = basketItemRepository.findById(basketItemId);
+	        if (basketItemOpt.isEmpty()) {
+	            throw new RuntimeException("Basket item not found");
+	        }
+	        BasketItem basketItem = basketItemOpt.get();
+	        if (!basket.getId().equals(basketItem.getBasketId())) {
+	            throw new RuntimeException("Basket item does not belong to the user");
+	        }
+	        basketItemRepository.delete(basketItem);
+	    }
 }
