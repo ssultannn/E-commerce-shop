@@ -4,18 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
 import lombok.Data;
+
 @Entity
 @Table(name = "sellers")
 @Data
@@ -24,14 +17,23 @@ public class SellerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Имя не должно быть пустым")
     private String name;
+
+    @NotBlank(message = "Фамилия не должна быть пустой")
     private String surname;
+
+    @NotBlank(message = "Email не должен быть пустым")
+    @Email(message = "Некорректный формат email")
     private String email;
 
     @Column(unique = true)
+    @NotBlank(message = "Имя пользователя не должно быть пустым")
     private String username;
 
     @JsonProperty("password")
+    @NotBlank(message = "Пароль не должен быть пустым")
+    @Size(min = 6, message = "Пароль должен содержать не менее 6 символов")
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -42,70 +44,13 @@ public class SellerEntity {
     public SellerEntity() {
     }
 
-    // Конструктор с параметрами (для всех полей)
+    // Конструктор с параметрами
     public SellerEntity(String name, String surname, String email, String username, String password, Set<String> roles) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.username = username;
         this.password = password;
-        this.roles = roles;
-    }
-
-    // Геттеры и сеттеры (уже предоставлены)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<String> roles) {
         this.roles = roles;
     }
 }
