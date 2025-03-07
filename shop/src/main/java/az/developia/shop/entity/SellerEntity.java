@@ -35,10 +35,10 @@ public class SellerEntity {
     @NotBlank(message = "Пароль не должен быть пустым")
     @Size(min = 6, message = "Пароль должен содержать не менее 6 символов")
     private String password;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    private Set<String> roles = new HashSet<>();
+//
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+//    private Set<String> roles = new HashSet<>();
 
     // Конструктор без параметров
     public SellerEntity() {
@@ -51,6 +51,6 @@ public class SellerEntity {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.roles = roles;
+//        this.roles = roles;
     }
 }
