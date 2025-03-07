@@ -2,9 +2,7 @@ package az.developia.shop.config;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +22,9 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import jakarta.servlet.http.HttpServletResponse;
 import az.developia.shop.security.JwtFilter;
+
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
@@ -57,14 +55,7 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         Map<String, PasswordEncoder> encoders = new HashMap<>();
-        
-        // Добавляем NoOpPasswordEncoder
         encoders.put("noop", NoOpPasswordEncoder.getInstance());
-        
-        // Также можно добавить другие энкодеры, например BCrypt, для будущего использования
-     
-
-        // Создаём DelegatingPasswordEncoder с {noop} как дефолтным префиксом
         return new DelegatingPasswordEncoder("noop", encoders);
     }
 
@@ -79,6 +70,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeRequests(auth -> auth
+                // Разрешаем доступ к Swagger UI и документации
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/users/register", "/users/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -95,4 +88,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
